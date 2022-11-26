@@ -53,7 +53,7 @@ def istft(input,
     else:
         num_samples_, _, fft_size, n_fft_frames = input.size()
         num_samples = num_samples_ // num_channels
-        input = input.movedim(1,-1)
+        input = input.movedim(1,-1).contiguous()
         input = torch.view_as_complex(input)
 
     istft = torch.istft(input, n_fft=n_fft, hop_length=hop_length, win_length=win_length, window=window, center=center, return_complex=False)
