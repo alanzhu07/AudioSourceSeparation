@@ -68,7 +68,9 @@ def sample_musdb_tracks(tracks, seconds, sample_targets="vocals", rng=None):
     if not sample_targets:
         output = []
         for track in tracks:
-            output.append(sample_seconds(track.audio.T, track.rate, seconds, rng=rng))
+            track.chunk_duration = seconds
+            track.chunk_start = rng.uniform(0, track.duration - track.chunk_duration)
+            output.append(track.audio.T)
         output = np.array(output)
 
         return output
@@ -76,7 +78,10 @@ def sample_musdb_tracks(tracks, seconds, sample_targets="vocals", rng=None):
         mixtures = []
         targets = []
         for track in tracks:
-            mixture_sampled, target_sampled = sample_seconds([track.audio.T, track.targets[sample_targets].audio.T], track.rate, seconds, rng=rng)
+            track.chunk_duration = seconds
+            track.chunk_start = rng.uniform(0, track.duration - track.chunk_duration)
+            mixture_sampled = track.audio.T
+            target_sampled = track.targets[sample_targets].audio.T
             mixtures.append(mixture_sampled)
             targets.append(target_sampled)
         mixtures, targets = np.array(mixtures), np.array(targets)
