@@ -47,7 +47,8 @@ class MMDenseNet(nn.Module):
 
         self.relu2d = nn.ReLU()
 
-        _in_channels = max([growth_rate[band][-1] for band in bands]) + growth_rate['full'][-1]
+        # _in_channels = max([growth_rate[band][-1] for band in bands]) + growth_rate['full'][-1]
+        _in_channels = growth_rate[-1]*2
         self.dense_block = DenseBlock(_in_channels, growth_rate_final, kernel_size_final, dilated=dilated_final, depth=depth_final, norm=norm_final, nonlinear=nonlinear_final, eps=eps)
         self.norm2d = nn.BatchNorm2d(growth_rate_final, eps=eps)
         self.conv2d = nn.Conv2d(growth_rate_final, in_channels, (1,1), stride=(1, 1))
@@ -128,6 +129,8 @@ class MMDenseNet(nn.Module):
         num_features = config['num_features']
         growth_rate = config['growth_rate']
         kernel_size = config['kernel_size']
+
+        bands, sections = config['bands'], config['sections']
         scale = config['scale']
         dilated = config['dilated']
         norm = config['norm']
@@ -146,6 +149,7 @@ class MMDenseNet(nn.Module):
             in_channels, num_features,
             growth_rate,
             kernel_size,
+            bands=bands, sections=sections,
             scale=scale,
             dilated=dilated, norm=norm, nonlinear=nonlinear,
             depth=depth,
@@ -167,6 +171,7 @@ class MMDenseNet(nn.Module):
         growth_rate = config['growth_rate']
 
         kernel_size = config['kernel_size']
+        bands, sections = config['bands'], config['sections']
         scale = config['scale']
 
         dilated, norm, nonlinear = config['dilated'], config['norm'], config['nonlinear']
@@ -184,6 +189,7 @@ class MMDenseNet(nn.Module):
             in_channels, num_features,
             growth_rate,
             kernel_size,
+            bands=bands, sections=sections,
             scale=scale,
             dilated=dilated, norm=norm, nonlinear=nonlinear,
             depth=depth,
