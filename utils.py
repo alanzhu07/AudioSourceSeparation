@@ -88,3 +88,28 @@ def sample_musdb_tracks(tracks, seconds, sample_targets="vocals", rng=None):
 
         return mixtures, targets
     
+def slice_musdb_track(track, seconds, sample_targets="vocals"):
+    """
+    tracks: musdb.audio_classes.Track
+
+    output: (num_tracks, num_channels, sampled_length)
+    """
+
+    if not sample_targets:
+        chunks = int(np.ceil(track.duration / seconds))
+        for chunk in range(chunks):
+            track.chunk_duration = seconds
+            track.chunk_start = chunk * seconds
+            mixture = track.audio.T
+
+            yield mixture
+
+    else:
+        chunks = int(np.ceil(track.duration / seconds))
+        for chunk in range(chunks):
+            track.chunk_duration = seconds
+            track.chunk_start = chunk * seconds
+            mixture = track.audio.T
+            target = track.targets[sample_targets].audio.T
+
+            yield mixture, target
