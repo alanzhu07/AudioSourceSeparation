@@ -131,4 +131,4 @@ dmypy.json
 # custom
 musdb18/
 .DS_Store
-.wav
+*.wav
