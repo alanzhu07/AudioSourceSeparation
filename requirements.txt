@@ -9,3 +9,4 @@ ffmpeg-python
 ffprobe
 
 ipykernel
+ipywidgets==7.7.2
