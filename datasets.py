@@ -15,7 +15,7 @@ class STFTDataset(torch.utils.data.Dataset):
         return self.mixture_stft[idx], self.target_stft[idx]
 
 class SamplingTrackDataset(torch.utils.data.Dataset):
-    def __init__(self, tracks, seconds=5., target='vocals', stft=True, device='cuda', augment=True, rng=None):
+    def __init__(self, tracks, seconds=5., target='vocals', stft=True, device='cuda', augment=False, rng=None):
         self.tracks = tracks
         self.seconds = seconds
         self.target = target
