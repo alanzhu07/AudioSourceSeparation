@@ -1,5 +1,6 @@
 import torch
 from utils import sample_musdb_track, slice_musdb_track_iterator
+from augmentation import freq_mask
 from transforms import stft
 
 class STFTDataset(torch.utils.data.Dataset):
@@ -14,13 +15,14 @@ class STFTDataset(torch.utils.data.Dataset):
         return self.mixture_stft[idx], self.target_stft[idx]
 
 class SamplingTrackDataset(torch.utils.data.Dataset):
-    def __init__(self, tracks, seconds=5., target='vocals', stft=True, device='cuda', rng=None):
+    def __init__(self, tracks, seconds=5., target='vocals', stft=True, device='cuda', augment=True, rng=None):
         self.tracks = tracks
         self.seconds = seconds
         self.target = target
         self.rng = rng
         self.stft = stft
         self.device = device
+        self.augment = augment
 
     def __len__(self):
         return len(self.tracks)
@@ -30,6 +32,8 @@ class SamplingTrackDataset(torch.utils.data.Dataset):
         if self.stft:
             mixture_stft = stft(torch.tensor(mixture[None], dtype=torch.float), device=self.device)[0]
             target_stft = stft(torch.tensor(target[None], dtype=torch.float), device=self.device)[0]
+            if self.augment:
+                mixture_stft = freq_mask(mixture_stft, F=mixture_stft.size(2))
             return mixture_stft, target_stft
         else:
             mixture = torch.tensor(mixture, dtype=torch.float, device=self.device)
