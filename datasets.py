@@ -33,7 +33,7 @@ class SamplingTrackDataset(torch.utils.data.Dataset):
             mixture_stft = stft(torch.tensor(mixture[None], dtype=torch.float), device=self.device)[0]
             target_stft = stft(torch.tensor(target[None], dtype=torch.float), device=self.device)[0]
             if self.augment:
-                mixture_stft = freq_mask(mixture_stft, F=mixture_stft.size(2))
+                mixture_stft = freq_mask(mixture_stft, F=mixture_stft.size(1), freq_dim=1, rng=self.rng)
             return mixture_stft, target_stft
         else:
             mixture = torch.tensor(mixture, dtype=torch.float, device=self.device)
