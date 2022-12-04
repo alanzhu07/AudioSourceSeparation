@@ -4,6 +4,7 @@ torchmetrics
 torchinfo
 
 musdb
+museval
 stempeg
 ffmpeg-python
 ffprobe
